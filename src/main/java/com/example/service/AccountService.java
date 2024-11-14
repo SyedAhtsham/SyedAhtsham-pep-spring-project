@@ -27,6 +27,6 @@ public class AccountService {
     }
 
     public Account loginAccount(Account account){
-        return null;
+        return accountRepository.findAccountByUsernameAndPassword(account.getUsername(),account.getPassword());
     }
 }
