@@ -1,11 +1,18 @@
 package com.example.controller;
 
 
+import java.util.List;
+
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -61,5 +68,21 @@ public class SocialMediaController {
     }
 
 
+    // This method will retrieve all the messages via Message service 
+    @GetMapping("messages")
+    public ResponseEntity<List<Message>> getAllMessages(){
+        List<Message> allMessages = messageService.retrieveAllMessages();
+
+        return new ResponseEntity<>(allMessages, HttpStatus.OK);
+    }
+
+    // This method finds a message by its id
+    @GetMapping("messages/{messageId}")
+    public ResponseEntity<Message> getSingleMessage(@PathVariable Integer messageId){
+        return new ResponseEntity<>(messageService.retrieveSingleMessage(messageId), HttpStatus.OK);
+
+    }
+
+    
 
 }
