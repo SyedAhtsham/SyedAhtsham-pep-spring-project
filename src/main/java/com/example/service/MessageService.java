@@ -44,4 +44,16 @@ public class MessageService {
         return null;
     }
 
+    // This method will delete message by finding it by id
+    public Integer removeMessage(Integer messageId){
+        
+        if(messageRepository.existsById(messageId)){
+            messageRepository.deleteById(messageId);
+            return 1;
+        }
+        return null;
+    }
+
+    
+
 }
