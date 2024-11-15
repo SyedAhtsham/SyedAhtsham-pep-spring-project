@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.entity.Account;
+import com.example.entity.Message;
 import com.example.service.AccountService;
 import com.example.service.MessageService;
 
@@ -48,6 +49,17 @@ public class SocialMediaController {
         }
         return new ResponseEntity<>(loggedInAccount, HttpStatus.OK);
     }
+
+    // This method adds a new message to the database using message Service and returns a response
+    @PostMapping("messages")
+    public ResponseEntity<Message> postMessage(@RequestBody Message message){
+        Message postedMessage = messageService.addMessage(message);
+        if(postedMessage==null){
+            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(postedMessage, HttpStatus.OK);
+    }
+
 
 
 }
