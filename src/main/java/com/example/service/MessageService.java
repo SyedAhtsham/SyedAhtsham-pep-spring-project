@@ -73,6 +73,8 @@ public class MessageService {
         return null;
     }
 
-
+    public List<Message> retrieveUserMessages(Integer accountId){
+        return messageRepository.findMessagesByPostedBy(accountId);
+    }
 
 }
