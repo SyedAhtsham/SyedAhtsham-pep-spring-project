@@ -49,11 +49,30 @@ public class MessageService {
         
         if(messageRepository.existsById(messageId)){
             messageRepository.deleteById(messageId);
-            return 1;
+            // now checking again if the message has been deleted successfully
+            if(!messageRepository.existsById(messageId)){
+                return 1;
+            }
         }
         return null;
     }
 
+
+    // This method will update the message text of a message for a given message id
+    public Integer updateMessage(Message message, Integer messageId){
+        if(messageRepository.existsById(messageId) && message.getMessageText() != "" && message.getMessageText().length()<255){
+            Optional<Message> optionalMessage = messageRepository.findById(messageId);
+            if(optionalMessage.isPresent()){
+                Message message2 = optionalMessage.get();
+                    message2.setMessageText(message.getMessageText());
+                    messageRepository.save(message2);
+                    return 1;
+            }
+        }
     
+        return null;
+    }
+
+
 
 }
