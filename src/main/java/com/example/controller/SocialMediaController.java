@@ -35,18 +35,21 @@ public class SocialMediaController {
     private final AccountService accountService;
     private final MessageService messageService;
 
+    
     @Autowired
     public SocialMediaController(AccountService accountService, MessageService messageService){
         this.accountService = accountService;
         this.messageService = messageService;
     }
 
+    // This api end point will create a new account in the database using the accountSerivice's method, if there is already an account with this username, it'll give a CONFLICT response status
     @PostMapping("register")
     public ResponseEntity<Account> registerAccount(@RequestBody Account account) {
         Account createdAccount = accountService.createAccount(account);
         return new ResponseEntity<>(createdAccount, createdAccount!=null?HttpStatus.OK:HttpStatus.CONFLICT);
     }
 
+    // log in api end point, it'll check if uesrname and password match a row in the database
     @PostMapping("login")
     public ResponseEntity<Account> loginAccount(@RequestBody Account account) {
         Account loggedInAccount = accountService.loginAccount(account);
@@ -68,7 +71,7 @@ public class SocialMediaController {
         return new ResponseEntity<>(allMessages, HttpStatus.OK);
     }
 
-    // This method finds a message by its id
+    // This method finds a message by its id, will return a response entity containing found message and status
     @GetMapping("messages/{messageId}")
     public ResponseEntity<Message> getSingleMessage(@PathVariable Integer messageId){
         return new ResponseEntity<>(messageService.retrieveSingleMessage(messageId), HttpStatus.OK);
@@ -81,7 +84,7 @@ public class SocialMediaController {
         return new ResponseEntity<>(messageService.removeMessage(messageId), HttpStatus.OK);
     }
 
-    // This method will remove the message from the database
+    // This method will update the message in the database and return 200 if update occured else 400
     @PatchMapping("messages/{messageId}")
     public ResponseEntity<Integer> patchMessage(@RequestBody Message message, @PathVariable Integer messageId){
         Integer noOfRowsEffected = messageService.updateMessage(message, messageId);
@@ -89,6 +92,7 @@ public class SocialMediaController {
 
     }
 
+    // This method will retrieve all messages posted by a user and send them as response to the user with 200 status
     @GetMapping("accounts/{accountId}/messages")
     public ResponseEntity<List<Message>> getAllMessagesByUser(@PathVariable Integer accountId){
         return new ResponseEntity<>(messageService.retrieveUserMessages(accountId), HttpStatus.OK);
