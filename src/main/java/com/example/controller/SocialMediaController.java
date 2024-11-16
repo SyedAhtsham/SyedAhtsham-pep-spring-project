@@ -44,29 +44,20 @@ public class SocialMediaController {
     @PostMapping("register")
     public ResponseEntity<Account> registerAccount(@RequestBody Account account) {
         Account createdAccount = accountService.createAccount(account);
-        if(createdAccount==null){
-            return new ResponseEntity<>(null, HttpStatus.CONFLICT);    
-        }
-        return new ResponseEntity<>(createdAccount, HttpStatus.OK);
+        return new ResponseEntity<>(createdAccount, createdAccount!=null?HttpStatus.OK:HttpStatus.CONFLICT);
     }
 
     @PostMapping("login")
     public ResponseEntity<Account> loginAccount(@RequestBody Account account) {
         Account loggedInAccount = accountService.loginAccount(account);
-        if(loggedInAccount==null){
-            return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);    
-        }
-        return new ResponseEntity<>(loggedInAccount, HttpStatus.OK);
+        return new ResponseEntity<>(loggedInAccount, loggedInAccount!=null?HttpStatus.OK:HttpStatus.UNAUTHORIZED);
     }
 
     // This method adds a new message to the database using message Service and returns a response
     @PostMapping("messages")
     public ResponseEntity<Message> postMessage(@RequestBody Message message){
         Message postedMessage = messageService.addMessage(message);
-        if(postedMessage==null){
-            return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(postedMessage, HttpStatus.OK);
+        return new ResponseEntity<>(postedMessage, postedMessage!=null?HttpStatus.OK:HttpStatus.BAD_REQUEST);
     }
 
 
@@ -74,7 +65,6 @@ public class SocialMediaController {
     @GetMapping("messages")
     public ResponseEntity<List<Message>> getAllMessages(){
         List<Message> allMessages = messageService.retrieveAllMessages();
-
         return new ResponseEntity<>(allMessages, HttpStatus.OK);
     }
 
@@ -91,14 +81,11 @@ public class SocialMediaController {
         return new ResponseEntity<>(messageService.removeMessage(messageId), HttpStatus.OK);
     }
 
-        // This method will remove the message from the database
+    // This method will remove the message from the database
     @PatchMapping("messages/{messageId}")
     public ResponseEntity<Integer> patchMessage(@RequestBody Message message, @PathVariable Integer messageId){
         Integer noOfRowsEffected = messageService.updateMessage(message, messageId);
-        if(noOfRowsEffected != null){
-            return new ResponseEntity<>(noOfRowsEffected, HttpStatus.OK);
-        }
-        return new ResponseEntity<>(noOfRowsEffected, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(noOfRowsEffected, noOfRowsEffected!=null?HttpStatus.OK:HttpStatus.BAD_REQUEST);
 
     }
 
